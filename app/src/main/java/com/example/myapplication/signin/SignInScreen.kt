@@ -2,6 +2,7 @@ package com.example.myapplication.signin
 
 //import android.text.Layout.Alignment
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -37,8 +39,21 @@ import com.example.myapplication.TextFieldTheme
 import com.example.myapplication.ui.theme.BlueGray
 import com.example.myapplication.ui.theme.Roboto
 
+
 @Composable
-fun SignInScreen(){
+fun ClickableText(
+    annotatedString: AnnotatedString,
+    onClick: () -> Unit
+) {
+    Text(
+        text = annotatedString,
+        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
+        modifier = Modifier.clickable { onClick() }
+    )
+}
+
+@Composable
+fun SignInScreen(onToggle: () -> Unit){
     Surface{
         Column(modifier= Modifier.fillMaxSize()){
             TopSection()
@@ -48,7 +63,7 @@ fun SignInScreen(){
             ) {
                 SignInSection()
                 Spacer(modifier = Modifier.height(20.dp))
-                BottomSection()
+                BottomSection(onToggle = onToggle)
             }
         }
     }
@@ -56,7 +71,7 @@ fun SignInScreen(){
 }
 
 @Composable
-private fun BottomSection() {
+private fun BottomSection(onToggle: () -> Unit) {
     val uiColor = if (isSystemInDarkTheme()) Color.White else Black
     Box(
         modifier = Modifier
@@ -65,8 +80,8 @@ private fun BottomSection() {
         contentAlignment = Alignment.Center
     )
     {
-        Text(
-            text = buildAnnotatedString {
+        ClickableText(
+            annotatedString = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(
                         color = Color(0xFF94A3B8),
@@ -89,7 +104,7 @@ private fun BottomSection() {
                     append("Sign Up")
                 }
             },
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
+            onClick = onToggle
         )
     }
 }
@@ -101,9 +116,8 @@ private fun SignInSection() {
 
     TextFieldTheme(
         label = "Password",
-
         trailing = "Fogot?",
-
+        type = "password",
         modifier = Modifier.fillMaxWidth(),
     )
 //    Image(painter = painterResource(id = icon), contentDescription = null, modifier = Modifier.size(16.dp) )

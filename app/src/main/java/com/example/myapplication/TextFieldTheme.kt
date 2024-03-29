@@ -14,18 +14,23 @@ import com.example.myapplication.ui.theme.Black
 import com.example.myapplication.ui.theme.focusedTextFieldText
 import com.example.myapplication.ui.theme.textFiledContainer
 import com.example.myapplication.ui.theme.unfocusedTextFieldText
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun TextFieldTheme(
 
     modifier: Modifier=Modifier,
     label:String,
-    trailing:String
+    trailing:String,
+    type: String = "text"
 ){
+    var text by remember { mutableStateOf("") }
     val uiColor=if (isSystemInDarkTheme()) Color.White else Black
     TextField(
         modifier=modifier,
-        value = "", onValueChange = {},
+        value = text, onValueChange = {text = it},
         label={
             Text(text = label, style=MaterialTheme.typography.labelMedium, color= uiColor)
         },
@@ -36,6 +41,11 @@ fun TextFieldTheme(
             focusedContainerColor = MaterialTheme.colorScheme.textFiledContainer,
 
         ),
+        visualTransformation = if (type == "password") {
+            PasswordVisualTransformation()
+        } else {
+            VisualTransformation.None
+        },
         trailingIcon={
             TextButton(onClick = { /*TODO*/ }) {
                 Text(

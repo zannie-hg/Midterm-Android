@@ -38,8 +38,9 @@ import com.example.myapplication.TextFieldTheme
 import com.example.myapplication.ui.theme.BlueGray
 import com.example.myapplication.ui.theme.Roboto
 
+
 @Composable
-fun SignUpScreen(){
+fun SignUpScreen(onToggle: () -> Unit){
     Surface{
         Column(modifier= Modifier.fillMaxSize()){
             TopSection()
@@ -49,15 +50,14 @@ fun SignUpScreen(){
             ) {
                 SignInSection()
                 Spacer(modifier = Modifier.height(20.dp))
-                BottomSection()
+                BottomSection(onToggle = onToggle)
             }
         }
     }
-
 }
 
 @Composable
-private fun BottomSection() {
+private fun BottomSection(onToggle: () -> Unit) {
     val uiColor = if (isSystemInDarkTheme()) Color.White else Black
     Box(
         modifier = Modifier
@@ -66,8 +66,8 @@ private fun BottomSection() {
         contentAlignment = Alignment.Center
     )
     {
-        Text(
-            text = buildAnnotatedString {
+        ClickableText(
+            annotatedString = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(
                         color = Color(0xFF94A3B8),
@@ -76,7 +76,7 @@ private fun BottomSection() {
                         fontWeight = FontWeight.Normal
                     )
                 ) {
-                    append("Already have account?")
+                    append("Already have an account?")
                 }
                 withStyle(
                     style = SpanStyle(
@@ -90,7 +90,7 @@ private fun BottomSection() {
                     append("Sign In")
                 }
             },
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
+            onClick = onToggle
         )
     }
 }
@@ -106,15 +106,15 @@ private fun SignInSection() {
 
     TextFieldTheme(
         label = "Password",
-
+        type = "password",
         trailing = "",
-
         modifier = Modifier.fillMaxWidth(),
     )
     Spacer(modifier = Modifier.height(15.dp))
 
     TextFieldTheme(label = "Confirm Password",
         trailing = "",
+        type = "password",
         modifier = Modifier
             .fillMaxWidth()
     )
@@ -177,5 +177,5 @@ private fun TopSection() {
 @Preview(showBackground = true, widthDp = 320, heightDp = 640)
 @Composable
 fun SignUpScreenPreview(){
-SignUpScreen()
+    SignUpScreen(onToggle = {})
 }
